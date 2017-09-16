@@ -12,7 +12,7 @@ io.on("connection", socket => {
   socket.emit("connection", true);
   socket.on("message", (message) => {
     console.log(message);
-    socket.emit("message", message)}
+    io.emit("message", message)}
   );
   socket.on("disconnect", () => console.log("Client disconnected"));
 });
