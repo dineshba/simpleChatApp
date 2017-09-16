@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/dineshba/simpleChatApp/issues"
   },
-  "homepage": "https://github.com/dineshba/simpleChatApp#readme"
+  "homepage": "https://github.com/dineshba/simpleChatApp#readme",
+  "dependencies": {
+    "universal-cookie": "^2.1.0"
+  }
 }

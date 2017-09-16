@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
 import MessagesView from './messagesView'
+import Cookies from 'universal-cookie';
 
-const socket = socketIOClient("http://127.0.0.1:4001");
+const cookies = new Cookies();
+
 class App extends Component {
   constructor() {
     super();
@@ -10,7 +12,6 @@ class App extends Component {
       response: false,
       newMessage: "",
       user: "",
-      confirmedUser: "",
       messages: []
     };
   }
@@ -34,7 +35,7 @@ class App extends Component {
   }
 
   sendMessage() {
-    socket.emit("message", {user: this.state.confirmedUser, content: this.state.newMessage});
+    socket.emit("message", {user: cookies.get('user'), content: this.state.newMessage});
     this.setState({message: ""})
   }
 
@@ -45,7 +46,7 @@ class App extends Component {
   }
 
   setUser(name) {
-    this.setState({confirmedUser: this.state.user})
+    cookies.set('user', this.state.user, { path: '/' });
     this.setState({user: ""})
   }
 
@@ -56,9 +57,9 @@ class App extends Component {
       <div style={{ textAlign: "center" }}>
         {response
           ? <div>
-              {this.state.confirmedUser ?
+              {cookies.get('user') ?
               <span>
-                <MessagesView messages={this.state.messages} user={this.state.confirmedUser}/>
+                <MessagesView messages={this.state.messages} user={cookies.get('user')}/>
                 <input type="text" value={this.state.newMessage}
                  onChange={event => this.handleChange(event)}
                  onKeyPress={(e) => this.handleKeyPress(e, () => this.sendMessage())}/>
