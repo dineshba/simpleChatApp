@@ -8,13 +8,13 @@ app.use(index);
 const server = http.createServer(app);
 const io = socketIo(server);
 io.on("connection", socket => {
-  console.log("New client connected"), setInterval(
-    () => getApiAndEmit(socket),
-    10000
+  console.log("New client connected");
+  socket.emit("connection", true);
+  socket.on("message", (message) => {
+    console.log(message);
+    socket.emit("message", message)}
   );
   socket.on("disconnect", () => console.log("Client disconnected"));
 });
-const getApiAndEmit = socket => {
-   socket.emit("FromAPI", 30);
-};
+
 server.listen(port, () => console.log(`Listening on port ${port}`));
