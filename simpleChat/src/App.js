@@ -32,6 +32,12 @@ class App extends Component {
     this.state.newMessage = "";
   }
 
+  handleKeyPress(e) {
+    if (e.key === 'Enter') {
+      this.sendMessage()
+    }
+  }
+
   render() {
     const { response } = this.state;
 
@@ -40,7 +46,9 @@ class App extends Component {
         {response
           ? <div>
               <MessagesView messages={this.state.messages}/>
-              <input type="text" value={this.state.newMessage} onChange={event => this.handleChange(event)} />
+              <input type="text" value={this.state.newMessage}
+               onChange={event => this.handleChange(event)}
+               onKeyPress={(e) => this.handleKeyPress(e)}/>
               <button onClick={() => this.sendMessage()}>
                 Send Message
               </button>
