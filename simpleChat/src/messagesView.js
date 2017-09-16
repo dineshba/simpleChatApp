@@ -6,7 +6,7 @@ export default class MessagesView extends Component {
       <div>
         {this.props.messages.map(
           (message, index) =>
-          <div key={index}>{message}</div>)
+          <div id={"message-" + index} key={index}>{ message.user + " : " + message.content}</div>)
         }
       </div>
     )

@@ -9,6 +9,8 @@ class App extends Component {
     this.state = {
       response: false,
       newMessage: "",
+      user: "",
+      confirmedUser: "",
       messages: []
     };
   }
@@ -27,15 +29,24 @@ class App extends Component {
     this.setState({newMessage: event.target.value});
   }
 
-  sendMessage() {
-    socket.emit("message", this.state.newMessage);
-    this.state.newMessage = "";
+  handleUser(event) {
+   this.setState({user: event.target.value});
   }
 
-  handleKeyPress(e) {
+  sendMessage() {
+    socket.emit("message", {user: this.state.confirmedUser, content: this.state.newMessage});
+    this.setState({message: ""})
+  }
+
+  handleKeyPress(e, func) {
     if (e.key === 'Enter') {
-      this.sendMessage()
+      func()
     }
+  }
+
+  setUser(name) {
+    this.setState({confirmedUser: this.state.user})
+    this.setState({user: ""})
   }
 
   render() {
@@ -45,13 +56,24 @@ class App extends Component {
       <div style={{ textAlign: "center" }}>
         {response
           ? <div>
-              <MessagesView messages={this.state.messages}/>
-              <input type="text" value={this.state.newMessage}
-               onChange={event => this.handleChange(event)}
-               onKeyPress={(e) => this.handleKeyPress(e)}/>
-              <button onClick={() => this.sendMessage()}>
-                Send Message
-              </button>
+              {this.state.confirmedUser ?
+              <span>
+                <MessagesView messages={this.state.messages} user={this.state.confirmedUser}/>
+                <input type="text" value={this.state.newMessage}
+                 onChange={event => this.handleChange(event)}
+                 onKeyPress={(e) => this.handleKeyPress(e, () => this.sendMessage())}/>
+                <button onClick={() => this.sendMessage()}>
+                  Send Message
+                </button>
+              </span>
+              : <span>
+                <input type="text" value={this.state.user}
+                 onChange={event => this.handleUser(event)}
+                 onKeyPress={(e) => this.handleKeyPress(e, () => this.setUser())}/>
+                <button onClick={() => this.setUser()}>
+                  Who are you?
+                </button>
+              </span>}
           </div>
           : <p>Loading...</p>}
       </div>
